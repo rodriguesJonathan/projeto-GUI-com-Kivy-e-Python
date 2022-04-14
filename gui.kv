@@ -46,14 +46,29 @@
         multiline: False
     Label:
         text: "Album lancamento do artista:"
-        size_hint_x: .3                
+        size_hint_x: .5                
         text_size: self.size
         halign: 'left'
         valign: 'middle'
         color: get_color_from_hex('#000000')
-    TextInput:
+    GridLayout:
+        cols: 4
         id: lancamentoAB
-        multiline: False
+        Label:
+            text: "Sim"
+            color: get_color_from_hex('#000000')
+            group: 'lancamentoAB'
+        CheckBox:
+            color: get_color_from_hex('#000000')
+            group: 'lancamentoAB'
+            on_active: root.checkBoxClick(self, self.active, "Sim") 
+        Label:
+            color: get_color_from_hex('#000000')
+            text: "Não"
+        CheckBox:
+            color: get_color_from_hex('#000000')
+            group: 'lancamentoAB'
+            on_active: root.checkBoxClick(self, self.active, "Nao")
     Button:
         size_hint: 1., 1.
         text: "Salvar"

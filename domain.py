@@ -2,6 +2,7 @@ from distutils.command.build import build
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.recycleview import RecycleView
+import db
 
 
 class ListaScreen(BoxLayout):
@@ -15,33 +16,34 @@ class RV(RecycleView):
 		print(kwargs)
 		modelList = []
 		model = "Numero:\n%d\nNome do Album:\n%s\nAno do lancamento:\n%s\nBanda/Artista:\n%s\nAlbum lancamento do artista:\n%s\n"
-		file = open("db.txt", 'r')
-		linhas = file.readlines()
 		num = 1
-		for linha in linhas:
-			nome, cpf, matricula, data_de_nascimento = linha.strip().split(";")
-			modelList.append( model%(num,nome, cpf, matricula, data_de_nascimento))
+		for linha in db.lerTodoBancoDeDados():
+			nomeAlbum, anoLancamento, bandaArtista, lancamentoAB = linha
+			modelList.append( model%(num,nomeAlbum, anoLancamento, bandaArtista, lancamentoAB))
 			num += 1
 		
-		file.close()
-
+		
 		self.data = [{'text': text} for text in modelList]
 
 
 
 
 class FirstScreen(BoxLayout):
+	checkBoxSelect = "Dado não informado"
+
+	def checkBoxClick(self, instace, value, text):
+		if value == True:
+			self.checkBoxSelect = f'{text}'
+			print(f"{text} ativo")
 
 	def on_press_salvar(self):
 		nomeAlbum     = self.ids.nomeAlbum.text
 		anoLancamento = self.ids.anoLancamento.text
 		bandaArtista  = self.ids.bandaArtista.text
-		lancamentoAB  = self.ids.lancamentoAB.text
+		lancamentoAB  = self.checkBoxSelect
 		
-		file = open("db.txt", 'a')
+		db.inserirNoBanco(nomeAlbum, anoLancamento, bandaArtista, lancamentoAB)
 
-		file.write("%s;%s;%s;%s\n"%(nomeAlbum, anoLancamento, bandaArtista, lancamentoAB))
-		file.close()
 		self.ids.nomeAlbum.text, self.ids.anoLancamento.text, self.ids.bandaArtista.text, self.ids.lancamentoAB.text = "","","",""
 
 	def on_press_lista(self):
