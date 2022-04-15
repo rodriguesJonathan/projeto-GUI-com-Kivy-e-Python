@@ -1,6 +1,6 @@
 #:import get_color_from_hex kivy.utils.get_color_from_hex
 
-<FirstScreen@BoxLayout>:
+<FirstScreen>:
     canvas.before:
         Color:
             rgba: get_color_from_hex('#D3D4D5')
@@ -23,6 +23,8 @@
         color: get_color_from_hex('#000000')
     TextInput:
         id: nomeAlbum
+        size_hint: 1., None
+        height: 30
         multiline: False
     Label:
         text: "Ano do lancamento:"
@@ -33,6 +35,8 @@
         color: get_color_from_hex('#000000')
     TextInput:
         id: anoLancamento
+        size_hint: 1., None
+        height: 30
         multiline: False
     Label:
         text: "Banda/Artista:"
@@ -43,6 +47,8 @@
         color: get_color_from_hex('#000000')
     TextInput:
         id: bandaArtista
+        size_hint: 1., None
+        height: 30
         multiline: False
     Label:
         text: "Album lancamento do artista:"
@@ -69,14 +75,32 @@
             color: get_color_from_hex('#000000')
             group: 'lancamentoAB'
             on_active: root.checkBoxClick(self, self.active, "Nao")
-    Button:
-        size_hint: 1., 1.
-        text: "Salvar"
-        on_release: root.on_press_salvar()
-    Button:
-        size_hint: 1., 1.
-        text: "Ver lista"
-        on_release: root.on_press_lista()
+    GridLayout:
+        cols: 3
+        Label:
+        Button:
+            size_hint: 1., 1.
+            text: "Salvar"
+            on_release: root.onPressSalvar()
+        Label:
+        Button:
+            size_hint: 1., 1.
+            text: "Burcar por nome"
+            on_release: root.onPressBuscaNome()
+        Button:
+            size_hint: 1., 1.
+            text: "Ver lista"
+            on_release: root.onPressLista()
+        Button:
+            size_hint: 1., 1.
+            text: "Burcar por ano"
+            on_release: root.onPressBuscaAno()
+
+
+<BackButton@Button>:
+    size_hint: 1., 0.2
+    text: "Voltar"
+    on_release: app.onPressVoltar()
 
 <LabelRV@Label>:
     size_hint_y: None
@@ -85,7 +109,7 @@
     width: 300
     color: (0,0,0,1)
 
-<RV@RecycleView>:
+<RVListaScreen>:
     viewclass: 'LabelRV'
     RecycleBoxLayout:
         default_size: None, None
@@ -95,7 +119,7 @@
         orientation: 'vertical'
         halign: 'left'
         
-<ListaScreen@BoxLayout>:
+<ListaScreen>:
     canvas.before:
         Color:
             rgba: get_color_from_hex('#D3D4D5')
@@ -110,12 +134,132 @@
     width: 500
     padding: ('10dp', '10dp', '10dp', '10dp')
     
-    RV:
-    Button:
-        size_hint: 1., 0.2
-        text: "Voltar"
-        on_release: root.on_press_voltar()
+    RVListaScreen:
+    BackButton:
+        
+<RVNomeScreen>:
+    viewclass: 'LabelRV'
     
+    RecycleBoxLayout:
+        default_size: None, None
+        padding: ('10dp', '10dp', '10dp', '10dp')
+        size_hint_y: None
+        height: self.minimum_height
+        orientation: 'vertical'
+        halign: 'left'
+    
+<BuscaPorNomeScreen>:
+    canvas.before:
+        Color:
+            rgba: get_color_from_hex('#D3D4D5')
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    orientation: 'vertical'
+    size_hint: None, None
+    pos_hint: {"center_x": .5, "center_y": .5}
+    
+    height: 500
+    width: 500
+    padding: ('10dp', '10dp', '10dp', '10dp')
+    Label:
+        text: "Informe o nome:"
+        size_hint: 1., None
+        text_size: self.size
+        height: 30
+        halign: 'left'
+        valign: 'middle'
+        color: get_color_from_hex('#000000')
+    TextInput:
+        id: nomeParaBusca
+        size_hint: 1., None
+        height: 30
+        multiline: False
+    Button:
+        size_hint: 1., None
+        height: 50
+        text: "Burcar"
+        on_release: root.showData()
+    RVNomeScreen:
+        id: recycleBuscaNome
+        
+        
+    BackButton:
+
+
+<RVAnoScreen>:
+    viewclass: 'LabelRV'
+    
+    RecycleBoxLayout:
+        default_size: None, None
+        padding: ('10dp', '10dp', '10dp', '10dp')
+        size_hint_y: None
+        height: self.minimum_height
+        orientation: 'vertical'
+        halign: 'left'
+
+<BuscaPorAnoScreen>:
+    canvas.before:
+        Color:
+            rgba: get_color_from_hex('#D3D4D5')
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    orientation: 'vertical'
+    size_hint: None, None
+    pos_hint: {"center_x": .5, "center_y": .5}
+    
+    height: 500
+    width: 500
+    padding: ('10dp', '10dp', '10dp', '10dp')
+    Label:
+        text: "Burcar o Album"
+        size_hint: 1., None
+        text_size: self.size
+        height: 30
+        halign: 'left'
+        valign: 'middle'
+        color: get_color_from_hex('#000000')
+    GridLayout:
+        cols: 6
+        id: condicaoCheckBox
+        size_hint_y: None
+        height: 40
+        Label:
+            text: "Anterior a"
+            color: get_color_from_hex('#000000')
+        CheckBox:
+            color: get_color_from_hex('#000000')
+            group: 'condicaoCheckBox'
+            on_active: root.checkBoxClick(self, self.active, 1) 
+        Label:
+            color: get_color_from_hex('#000000')
+            text: "Igual a"
+        CheckBox:
+            color: get_color_from_hex('#000000')
+            group: 'condicaoCheckBox'
+            on_active: root.checkBoxClick(self, self.active, 2)
+        Label:
+            color: get_color_from_hex('#000000')
+            text: "Postarior A"
+        CheckBox:
+            color: get_color_from_hex('#000000')
+            group: 'condicaoCheckBox'
+            on_active: root.checkBoxClick(self, self.active, 3)
+    DropdownDemo:
+        id: dropdown
+        size_hint_y: None
+        height: 44
+    Button:
+        size_hint: 1., None
+        height: 50
+        text: "Burcar"
+        on_release: root.showDataAno()
+    RVAnoScreen:
+        id: recycleBuscaAno
+        
+        
+    BackButton:
 
 
 
