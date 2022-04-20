@@ -1,7 +1,15 @@
+import json
 def inserirNoBanco(*args):
-	file = open("db.txt", 'a')
-	file.write(("%s;%s;%s;%s\n"%(args)).lower())
-	file.close()
+	dicionario = {}
+	chaves = ["nome", "ano_album", "grupo", "lancamento"]
+	for pos in range(len(chaves)):
+		dicionario[chaves[pos]] = args[pos]
+	with open('dados.json', 'r') as json_file:                
+		oldData = json.load(json_file)
+	with open('dados.json', 'w') as json_file:
+		oldData.append(dicionario)
+		jsoned_data = json.dumps(oldData, indent=True)
+		json_file.write(jsoned_data)
 
 def lerTodoBancoDeDados():
 	lista = []
