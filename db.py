@@ -1,26 +1,35 @@
 import json
 def inserirNoBanco(*args):
-	dicionario = {}
-	chaves = ["nome", "ano_album", "grupo", "lancamento"]
-	for pos in range(len(chaves)):
-		dicionario[chaves[pos]] = args[pos]
-	with open('dados.json', 'r') as json_file:                
-		oldData = json.load(json_file)
-	with open('dados.json', 'w') as json_file:
-		oldData.append(dicionario)
-		jsoned_data = json.dumps(oldData, indent=True)
-		json_file.write(jsoned_data)
+	try:
+		dicionario = {}
+		chaves = ["nome", "ano_album", "grupo", "lancamento"]
+		for pos in range(len(chaves)):
+			dicionario[chaves[pos]] = args[pos]
+		with open('dados.json', 'r') as json_file:                
+			oldData = json.load(json_file)
+		with open('dados.json', 'w') as json_file:
+			oldData.append(dicionario)
+			jsoned_data = json.dumps(oldData, indent=True)
+			json_file.write(jsoned_data)
+	except (FileNotFoundError, json.decoder.JSONDecodeError):
+		with open('dados.json', 'w') as json_file:
+			jsoned_data = json.dumps([], indent=True)
+			json_file.write(jsoned_data)
+		inserirNoBanco(*args)
+	
 
 def lerTodoBancoDeDados():
 	lista = []
-	arquivo = open("db.txt", 'r')
-	linhas = arquivo.readlines()
-	arquivo.close()
-	num = 1
-	for linha in linhas:
-		lista.append(linha.strip().split(";"))
-		num += 1
-	return lista
+	try:
+		arquivo = open("db.txt", 'r')
+		linhas = arquivo.readlines()
+		arquivo.close()
+		num = 1
+		for linha in linhas:
+			lista.append(linha.strip().split(";"))
+			num += 1
+	finally:
+		return lista
 
 def buscarPorNomeArtistaBanda(nome):
 	nome = nome.lower()
