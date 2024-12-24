@@ -58,7 +58,7 @@ class BuscaPorAnoScreen(BoxLayout):
 	def showDataAno(self):
 		lista = []
 		model = "Numero:\n%d\nNome do Album:\n%s\nAno do lancamento:\n%s\nBanda/Artista:\n%s\nAlbum lancamento do artista:\n%s\n"
-		listaNomes = db.buscarPorAnoBanda(self.ids.dropdown.anoEscolhido, self.checkBoxSelect)
+		listaNomes = domain.buscarPorAnoBanda(self.ids.dropdown.anoEscolhido, self.checkBoxSelect)
 
 		for linha in listaNomes:
 			num, nomeAlbum, anoLancamento, bandaArtista, lancamentoAB = linha
@@ -80,7 +80,7 @@ class BuscaPorNomeScreen(BoxLayout):
 		nome = self.ids.nomeParaBusca.text
 		lista = []
 		model = "Numero:\n%d\nNome do Album:\n%s\nAno do lancamento:\n%s\nBanda/Artista:\n%s\nAlbum lancamento do artista:\n%s\n"
-		listaNomes = db.buscarPorNomeArtistaBanda(nome)
+		listaNomes = domain.buscarPorNomeArtistaBanda(nome)
 
 
 		for linha in listaNomes:
